@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AndroidStudy1</string>
+    <string name="tishi1">用户名</string>
+    <string name="tish2">密码</string>
+</resources>
