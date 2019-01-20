@@ -2,22 +2,39 @@ package xxm.com.androidstudy1;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.nfc.Tag;
-import android.support.v7.app.AlertDialog;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
-    private Button loginBtn;
-    private EditText username;
-    private EditText password;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import xxm.com.androidstudy1.util.Const;
+import xxm.com.androidstudy1.util.MyHttpClient;
+
+public class MainActivity extends AppCompatActivity{
+
+    private ListView meetingListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,22 +44,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView(){
-        username = (EditText) findViewById(R.id.editText2);
-        password = (EditText) findViewById(R.id.editText4);
-        loginBtn = (Button) findViewById(R.id.button);
-        loginBtn.setOnClickListener(this);
-        loginBtn.setOnLongClickListener(new View.OnLongClickListener() {
+        meetingListView = findViewById(R.id.MeetingListView);
+        meetingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onLongClick(View view) {
-                Log.d("MainActivity", "长按了按钮");
-                Toast.makeText(MainActivity.this,"长按了按钮",Toast.LENGTH_SHORT).show();
-                return true;
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                System.out.println("aaaaaa");
+            }
+        });
+        final Map<String, String> params = new HashMap<>();
+        params.put("currentGroupId", "1");
+        MyHttpClient.asyncGet(Const.GET_MEETING_LIST, params, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.out.println("failure");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                ResponseBody body = response.body();
+                String res = body.string();
+                Message message = handler.obtainMessage();
+                message.obj = res;
+                handler.sendMessage(message);
             }
         });
     }
 
-    @Override
-    public void onClick(View view) {
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            Object obj = msg.obj;
+            JSONObject json = JSONObject.parseObject(obj.toString());
+            JSONArray arr = json.getJSONArray("meetingList");
+            String[] data = new String[arr.size()];
+            for(int i=0 ; i<arr.size() ; i++){
+                JSONObject temp = arr.getJSONObject(i);
+                String title = temp.getString("title");
+                data[i] = title;
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, R.layout.support_simple_spinner_dropdown_item, data);
+            meetingListView.setAdapter(adapter);
+        }
+    };
+    /*public void onClick(View view) {
+        System.out.println("aaaaaaaaaaaaa");
         switch (view.getId()){
             case R.id.button:
                 String name,pwd;
@@ -75,5 +121,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             default:
                 break;
         }
-    }
+    }*/
 }

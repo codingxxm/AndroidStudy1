@@ -1,56 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<xxm.com.androidstudy1.CustomToolBar
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:left_tv_visible="true"
+    app:left_tv_text="返回"
+    app:title_visible="true"
+    app:title_text="会议助理"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="31dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="61dp"
-        android:layout_marginTop="148dp"
-        android:text="@string/tishi1" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="48dp"
-        android:layout_height="31dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/textView2"
-        android:layout_marginTop="207dp"
-        android:text="@string/tish2" />
-
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="204dp"
-        android:layout_height="50dp"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="49dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="" />
-
-    <EditText
-        android:id="@+id/editText4"
-        android:layout_width="205dp"
-        android:layout_height="50dp"
-        android:layout_alignBottom="@+id/textView3"
-        android:layout_alignStart="@+id/editText2"
-        android:ems="10"
-        android:inputType="textPassword"
-        />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="登录" />
-
-</RelativeLayout>
+    <ListView
+        android:id="@+id/MeetingListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</xxm.com.androidstudy1.CustomToolBar>
