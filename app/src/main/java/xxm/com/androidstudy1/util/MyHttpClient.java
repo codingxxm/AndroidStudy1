@@ -28,7 +28,7 @@ import okhttp3.ResponseBody;
 
 public class MyHttpClient {
 
-    private static OkHttpClient client = null;
+    private static volatile OkHttpClient client = null;
 
     private final static MyX509TrustManager trustManager = new MyX509TrustManager();
 
