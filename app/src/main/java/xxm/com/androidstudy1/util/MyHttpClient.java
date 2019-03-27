@@ -28,7 +28,7 @@ import okhttp3.ResponseBody;
 
 public class MyHttpClient {
 
-    private static OkHttpClient client;
+    private static OkHttpClient client = null;
 
     private final static MyX509TrustManager trustManager = new MyX509TrustManager();
 
@@ -36,28 +36,30 @@ public class MyHttpClient {
 
     private final static MediaType defaultMediatype = MediaType.get("application/json; charset=utf-8");
 
-    static {
-        try {
-            final TrustManager[] trustAllCerts = new TrustManager[]{trustManager};
-            final SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-            final javax.net.ssl.SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-            client = new OkHttpClient.Builder()
-                    .sslSocketFactory(sslSocketFactory,trustManager)
-                    .hostnameVerifier(hostnameVerifier)
-                    .connectTimeout(30,TimeUnit.SECONDS)
-                    .build();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
     private MyHttpClient() {
 
     }
 
     public static OkHttpClient getClient() {
+        if(client==null){
+            synchronized (MyHttpClient.class){
+                if(client==null){
+                    try {
+                        final TrustManager[] trustAllCerts = new TrustManager[]{trustManager};
+                        final SSLContext sslContext = SSLContext.getInstance("SSL");
+                        sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+                        final javax.net.ssl.SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+                        client = new OkHttpClient.Builder()
+                                .sslSocketFactory(sslSocketFactory,trustManager)
+                                .hostnameVerifier(hostnameVerifier)
+                                .connectTimeout(30,TimeUnit.SECONDS)
+                                .build();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
         return client;
     }
 
